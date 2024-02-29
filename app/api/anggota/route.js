@@ -35,3 +35,25 @@ export async function GET(request, response) {
     );
   }
 }
+
+export async function POST(request) {
+  const body = await request.json();
+  const session = await getUserSession();
+  if (session?.role !== "admin") {
+    return NextResponse.json({
+      status: 403,
+      message: "Unautherize",
+    });
+  }
+  if (
+    body.slug &&
+    body.nama &&
+    body.kelas &&
+    body.image &&
+    body.gender &&
+    body.jabatan &&
+    body.divisi
+  ) {
+    const newAnggota = prisma.member.create();
+  }
+}
