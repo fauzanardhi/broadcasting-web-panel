@@ -1,11 +1,12 @@
-import React from 'react'
+import React from "react";
 
-export default function AnggotaCard() {
+export default function AnggotaCard({ data }) {
+  console.log(data);
   return (
-    <div className='bg-slate-200 p-2 rounded-md'>
-      <h3>Nama Anggota</h3>
-      <h4>Anggota</h4>
-      <p>X TM 2</p>
+    <div className="bg-slate-200 p-2 rounded-md">
+      <h3>{data.nama}</h3>
+      <h4>{data.jabatan}</h4>
+      <p>{data.kelas}</p>
     </div>
-  )
+  );
 }

@@ -9,10 +9,18 @@ export async function GET(request, response) {
       { status: 403, message: "Unautherize" },
       { status: 403 }
     );
+
   const query = request.nextUrl.searchParams.get("q");
-  const data = await prisma.member.FindMany({});
+  const data = await prisma.member.findMany({});
+  if (!query) {
+    return NextResponse.json({
+      status: 200,
+      message: "OK",
+      data: data,
+    });
+  }
   const selectedData = data.filter((data) =>
-    data.name.toLowerCase().includes(query.toLowerCase())
+    data.nama.toLowerCase().includes(query.toLowerCase())
   );
   if (selectedData.length > 0) {
     return NextResponse.json({

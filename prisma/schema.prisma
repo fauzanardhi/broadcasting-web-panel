@@ -61,7 +61,7 @@ model VerificationToken {
 }
 
 model Member {
-  id        String   @id
+  id        String   @id @default(cuid())
   slug      String   @unique
   nama      String
   image     String

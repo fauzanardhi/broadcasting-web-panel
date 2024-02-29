@@ -8,6 +8,7 @@ import {
 import React from "react";
 import { FaCircleUser } from "react-icons/fa6";
 import SidebarMobile from "./SidebarMobile";
+import SidebarComponent from "./Sidebar";
 
 export default function Navbar({ children }) {
   return (
@@ -28,10 +29,12 @@ export default function Navbar({ children }) {
           </Popover>
         </div>
       </nav>
-      <div className="block md:hidden">
+      <div className="block lg:hidden">
         <SidebarMobile>{children}</SidebarMobile>
       </div>
-      <div className="hidden md:block"></div>
+      <div className="hidden lg:block">
+        <SidebarComponent>{children}</SidebarComponent>
+      </div>
     </div>
   );
 }
