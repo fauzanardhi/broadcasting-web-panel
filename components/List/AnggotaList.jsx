@@ -6,6 +6,7 @@ import {
   Dialog,
   DialogContent,
   DialogDescription,
+  DialogFooter,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
@@ -13,9 +14,34 @@ import {
 import { FaUserPlus } from "react-icons/fa";
 import { Input } from "../ui/input";
 import { Label } from "../ui/label";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import {
+  Table,
+  TableBody,
+  TableCaption,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+import AnggotaTable from "../Table/AnggotaTable";
+import { toast } from "sonner";
 
 export default function AnggotaList() {
   const [data, setData] = useState([]);
+  const nama = useRef("");
+  const kelas = useRef("");
+  const jabatan = useRef("");
+  const gender = useRef("");
+  const image = useRef("");
+  const divisi = useRef("");
+
   const [loading, setLoading] = useState(true);
   const query = useRef("");
   useEffect(() => {
@@ -51,6 +77,34 @@ export default function AnggotaList() {
     );
   }
 
+  const addData = async (e) => {
+    e.preventDefault();
+    try {
+      const res = await fetch("/api/anggota", {
+        method: "POST",
+        body: JSON.stringify({
+          nama: nama.current,
+          kelas: kelas.current,
+          image: image.current,
+          gender: gender.current,
+          jabatan: jabatan.current,
+          divisi: divisi.current,
+        }),
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+
+      if (!res.ok) {
+        toast.error("Something went wrong");
+      }
+
+      toast.success("Data has been added successfully");
+    } catch {
+      toast.error("Something went wrong");
+    }
+  };
+
   const searchData = async (e) => {
     query.current = e.target.value;
     e.preventDefault();
@@ -78,7 +132,7 @@ export default function AnggotaList() {
           type="text"
           onChange={(e) => searchData(e)}
           placeholder="Cari Anggota"
-          className="px-3 py-2 rounded-md"
+          className="px-3 py-2 rounded-m bg-white"
         />
         <Dialog>
           <DialogTrigger>
@@ -91,7 +145,7 @@ export default function AnggotaList() {
                 Tambah Anggota. Jan Lupa Disave Ya Sayang ❤{" "}
               </DialogDescription>
             </DialogHeader>
-            <form>
+            <div className="flex flex-col gap-2">
               <div className="flex flex-col gap-2">
                 <Label htmlFor="nama_anggota">Nama Anggota</Label>
                 <Input id="nama_anggota" />
@@ -101,17 +155,35 @@ export default function AnggotaList() {
                 <Input id="kelas_anggota" />
               </div>
               <div className="flex flex-col gap-2">
-                <Label htmlFor="kelas_anggota">Kelas</Label>
-                <Input id="kelas_anggota" />
+                <Label htmlFor="gender_anggota">Gender</Label>
+                <Select id="gender_anggota">
+                  <SelectTrigger className="w-[180px]">
+                    <SelectValue placeholder="Gender" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="Laki_Laki">Laki Laki</SelectItem>
+                    <SelectItem value="Perempuan">Perempuan</SelectItem>
+                  </SelectContent>
+                </Select>
               </div>
-            </form>
+              <div className="flex flex-col gap-2">
+                <Label htmlFor="kelas_anggota">Divisi</Label>
+                <Input
+                  id="kelas_anggota"
+                  onChange={(e) => kelas.current === e.target.value}
+                />
+              </div>
+            </div>
           </DialogContent>
+          <DialogFooter>
+            
+          </DialogFooter>
         </Dialog>
       </div>
       {!data ? (
         <div className="min-h-screen flex flex-grow items-center justify-center bg-gray-50">
           <div className="rounded-lg bg-white p-8 text-center shadow-xl">
-            <h1 className="mb-4 text-4xl font-bold">404</h1>
+            <h1 className="mb-4 text-4xl font-bold">Data Tidak Ditemukan</h1>
             <p className="text-gray-600">
               {query.current.toLowerCase() === "bilal" ? (
                 <span className="font-extrabold">
@@ -128,13 +200,32 @@ export default function AnggotaList() {
           </div>
         </div>
       ) : (
-        <div className="grid grid-cols-2 mt-3">
-          {data.data.map((anggota, index) => (
-            <div key={index}>
-              <AnggotaCard data={anggota} />
-            </div>
-          ))}
-        </div>
+        <>
+          <div className="grid grid-cols-2 mt-3 lg:hidden">
+            {data.data.map((anggota, index) => (
+              <div key={index}>
+                <AnggotaCard data={anggota} />
+              </div>
+            ))}
+          </div>
+          <div className="hidden lg:block">
+            <Table>
+              <TableHeader>
+                <TableHead>Nama Anggota</TableHead>
+                <TableHead>Kelas</TableHead>
+                <TableHead>Jabatan</TableHead>
+                <TableHead>Gender</TableHead>
+                <TableHead>Divisi</TableHead>
+                <TableHead className="text-right">Aksi</TableHead>
+              </TableHeader>
+              <TableBody>
+                {data.data.map((anggota, index) => (
+                  <AnggotaTable data={anggota} key={index} />
+                ))}
+              </TableBody>
+            </Table>
+          </div>
+        </>
       )}
     </div>
   );

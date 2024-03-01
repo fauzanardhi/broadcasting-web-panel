@@ -4,18 +4,39 @@ import AllProviders from "@/components/Providers/AllProviders";
 
 const inter = Inter({ subsets: ["latin"] });
 
+const APP_NAME = "Broadcasting Web Panel";
+const APP_DEFAULT_TITLE = "Broadcasting Web Panel";
+const APP_TITLE_TEMPLATE = "%s - Broadcasting Web Panel";
+const APP_DESCRIPTION = "Web Panel For Broadcasting";
+
 export const metadata = {
-  title: "Broadcasting Texar",
-  description: "Ekskul Broadcasting SMK Texar Klari Karawang Web Panel",
+  applicationName: APP_NAME,
+  title: {
+    default: APP_DEFAULT_TITLE,
+    template: APP_TITLE_TEMPLATE,
+  },
+  description: APP_DESCRIPTION,
+  manifest: "/manifest.json",
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: "default",
+    title: APP_DEFAULT_TITLE,
+    // startUpImage: [],
+  },
+  formatDetection: {
+    telephone: false,
+  },
+};
+
+export const viewport = {
+  themeColor: "#FFFFFF",
 };
 
 export default function RootLayout({ children }) {
   return (
     <html lang="id">
       <body className={inter.className}>
-        <AllProviders>
-          {children}
-        </AllProviders>
+        <AllProviders>{children}</AllProviders>
       </body>
     </html>
   );
