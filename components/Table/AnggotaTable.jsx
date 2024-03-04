@@ -89,6 +89,7 @@ export default function AnggotaTable({ data }) {
                     <Input
                       id="nama_anggota"
                       defaultValue={nama.current ? nama.current : data.nama}
+                      onChange={(e) => nama.current === e.target.value}
                     />
                   </div>
                   <div className="flex flex-col gap-2">
@@ -96,12 +97,18 @@ export default function AnggotaTable({ data }) {
                     <Input
                       id="kelas_anggota"
                       onChange={(e) => kelas.current === e.target.value}
-                      defaultValue={kelas.current}
+                      defaultValue={kelas.current ? kelas.current : data.kelas}
                     />
                   </div>
                   <div className="flex flex-col gap-2">
                     <Label htmlFor="gender_anggota">Gender</Label>
-                    <Select id="gender_anggota" defaultValue={gender.current}>
+                    <Select
+                      id="gender_anggota"
+                      defaultValue={
+                        gender.current ? gender.current : data.gender
+                      }
+                      onChange={(e) => gender.current === e.target.value}
+                    >
                       <SelectTrigger className="w-[180px]">
                         <SelectValue placeholder="Gender" />
                       </SelectTrigger>
