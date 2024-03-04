@@ -86,7 +86,10 @@ export default function AnggotaTable({ data }) {
                 <div className="flex flex-col gap-2">
                   <div className="flex flex-col gap-2">
                     <Label htmlFor="nama_anggota">Nama Anggota</Label>
-                    <Input id="nama_anggota" value={nama.current} />
+                    <Input
+                      id="nama_anggota"
+                      defaultValue={nama.current ? nama.current : data.nama}
+                    />
                   </div>
                   <div className="flex flex-col gap-2">
                     <Label htmlFor="kelas_anggota">Kelas</Label>
