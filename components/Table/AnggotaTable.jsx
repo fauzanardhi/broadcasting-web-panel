@@ -34,7 +34,7 @@ export default function AnggotaTable({ data }) {
   const gender = useRef("");
 
   useEffect(() => {
-    const initializeData = async () => {
+    const initializeData = () => {
       nama.current = data.nama;
       kelas.current = data.kelas;
       jabatan.current = data.jabatan;
