@@ -34,7 +34,7 @@ import AnggotaTable from "../Table/AnggotaTable";
 import { toast } from "sonner";
 import { Button } from "../ui/button";
 
-export default function AnggotaList() {
+export default function AnggotaList({ session }) {
   const [data, setData] = useState([]);
   const nama = useRef("");
   const kelas = useRef("");
@@ -149,87 +149,89 @@ export default function AnggotaList() {
           type="text"
           onChange={(e) => searchData(e)}
           placeholder="Cari Anggota"
-          className="px-3 py-2 rounded-m bg-white"
+          className="px-3 py-2 rounded-lg bg-white"
         />
-        <Dialog>
-          <DialogTrigger>
-            <FaUserPlus size={27} />
-          </DialogTrigger>
-          <DialogContent>
-            <DialogHeader>
-              <DialogTitle>Tambah Anggota</DialogTitle>
-              <DialogDescription>
-                Tambah Anggota. Jan Lupa Disave Ya Sayang ❤{" "}
-              </DialogDescription>
-            </DialogHeader>
-            <div className="flex flex-col gap-2">
+        {session.role === "Admin" && (
+          <Dialog>
+            <DialogTrigger>
+              <FaUserPlus size={27} />
+            </DialogTrigger>
+            <DialogContent>
+              <DialogHeader>
+                <DialogTitle>Tambah Anggota</DialogTitle>
+                <DialogDescription>
+                  Tambah Anggota. Jan Lupa Disave Ya Sayang ❤{" "}
+                </DialogDescription>
+              </DialogHeader>
               <div className="flex flex-col gap-2">
-                <Label htmlFor="nama_anggota">Nama Anggota</Label>
-                <Input
-                  id="nama_anggota"
-                  onChange={(e) => (nama.current = e.target.value)}
-                />
+                <div className="flex flex-col gap-2">
+                  <Label htmlFor="nama_anggota">Nama Anggota</Label>
+                  <Input
+                    id="nama_anggota"
+                    onChange={(e) => (nama.current = e.target.value)}
+                  />
+                </div>
+                <div className="flex flex-col gap-2">
+                  <Label htmlFor="kelas_anggota">Kelas</Label>
+                  <Input
+                    id="kelas_anggota"
+                    onChange={(e) => (kelas.current = e.target.value)}
+                  />
+                </div>
+                <div className="flex flex-col gap-2">
+                  <Label htmlFor="image_anggota">Link Gambar</Label>
+                  <Input
+                    id="image_anggota"
+                    onChange={(e) => (image.current = e.target.value)}
+                  />
+                </div>
+                <div className="flex flex-col gap-2">
+                  <Label htmlFor="jabatan_anggota">Jabatan</Label>
+                  <Select
+                    id="jabatan_anggota"
+                    onValueChange={(e) => changeJabatan(e)}
+                  >
+                    <SelectTrigger className="w-[180px]">
+                      <SelectValue placeholder="Jabatan" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="Ketua">Ketua</SelectItem>
+                      <SelectItem value="Wakil_Ketua">Wakil Ketua</SelectItem>
+                      <SelectItem value="Sekertaris">Sekertaris</SelectItem>
+                      <SelectItem value="Bendahara">Bendahara</SelectItem>
+                      <SelectItem value="Anggota">Anggota</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+                <div className="flex flex-col gap-2">
+                  <Label htmlFor="gender_anggota">Gender</Label>
+                  <Select
+                    id="gender_anggota"
+                    onValueChange={(e) => changeGender(e)}
+                  >
+                    <SelectTrigger className="w-[180px]">
+                      <SelectValue placeholder="Gender" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="Laki_Laki">Laki Laki</SelectItem>
+                      <SelectItem value="Perempuan">Perempuan</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+                <div className="flex flex-col gap-2">
+                  <Label htmlFor="kelas_anggota">Divisi</Label>
+                  <Input
+                    id="kelas_anggota"
+                    onChange={(e) => (divisi.current = e.target.value)}
+                  />
+                </div>
               </div>
-              <div className="flex flex-col gap-2">
-                <Label htmlFor="kelas_anggota">Kelas</Label>
-                <Input
-                  id="kelas_anggota"
-                  onChange={(e) => (kelas.current = e.target.value)}
-                />
-              </div>
-              <div className="flex flex-col gap-2">
-                <Label htmlFor="image_anggota">Link Gambar</Label>
-                <Input
-                  id="image_anggota"
-                  onChange={(e) => (image.current = e.target.value)}
-                />
-              </div>
-              <div className="flex flex-col gap-2">
-                <Label htmlFor="jabatan_anggota">Jabatan</Label>
-                <Select
-                  id="jabatan_anggota"
-                  onValueChange={(e) => changeJabatan(e)}
-                >
-                  <SelectTrigger className="w-[180px]">
-                    <SelectValue placeholder="Jabatan" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="Ketua">Ketua</SelectItem>
-                    <SelectItem value="Wakil_Ketua">Wakil Ketua</SelectItem>
-                    <SelectItem value="Sekertaris">Sekertaris</SelectItem>
-                    <SelectItem value="Bendahara">Bendahara</SelectItem>
-                    <SelectItem value="Anggota">Anggota</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-              <div className="flex flex-col gap-2">
-                <Label htmlFor="gender_anggota">Gender</Label>
-                <Select
-                  id="gender_anggota"
-                  onValueChange={(e) => changeGender(e)}
-                >
-                  <SelectTrigger className="w-[180px]">
-                    <SelectValue placeholder="Gender" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="Laki_Laki">Laki Laki</SelectItem>
-                    <SelectItem value="Perempuan">Perempuan</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-              <div className="flex flex-col gap-2">
-                <Label htmlFor="kelas_anggota">Divisi</Label>
-                <Input
-                  id="kelas_anggota"
-                  onChange={(e) => (divisi.current = e.target.value)}
-                />
-              </div>
-            </div>
-            <DialogFooter>
-              <Button onClick={addData}>Simpan</Button>
-            </DialogFooter>
-          </DialogContent>
-        </Dialog>
+              <DialogFooter>
+                <Button onClick={addData}>Simpan</Button>
+              </DialogFooter>
+            </DialogContent>
+          </Dialog>
+        )}
       </div>
       {!data ? (
         <div className="min-h-screen flex flex-grow items-center justify-center bg-gray-50">
@@ -267,11 +269,13 @@ export default function AnggotaList() {
                 <TableHead>Jabatan</TableHead>
                 <TableHead>Gender</TableHead>
                 <TableHead>Divisi</TableHead>
-                <TableHead className="text-right">Aksi</TableHead>
+                {session.role === "Admin" && (
+                  <TableHead className="text-right">Aksi</TableHead>
+                )}
               </TableHeader>
               <TableBody>
                 {data.data.map((anggota) => (
-                  <AnggotaTable data={anggota} key={anggota.id} />
+                  <AnggotaTable data={anggota} session={session} key={anggota.id} />
                 ))}
               </TableBody>
             </Table>

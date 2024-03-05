@@ -1,11 +1,17 @@
-import AnggotaList from '@/components/List/AnggotaList'
-import React from 'react'
+import AnggotaList from "@/components/List/AnggotaList";
+import getUserSession from "@/data/user";
+import { redirect } from "next/navigation";
+import React from "react";
 
-export default function AnggotaPage() {
+export default async function AnggotaPage() {
+  const session = await getUserSession();
+  if (!session) {
+    redirect("/api/auth/signin");
+  }
   return (
     <div>
-        <h1>Daftar Anggota</h1>
-        <AnggotaList />
+      <h1>Daftar Anggota</h1>
+      <AnggotaList session={session} />
     </div>
-  )
+  );
 }

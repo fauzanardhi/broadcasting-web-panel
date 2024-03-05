@@ -12,8 +12,7 @@ import SidebarComponent from "./Sidebar";
 import { useSession } from "next-auth/react";
 import { usePathname } from "next/navigation";
 
-export default function Navbar({ children }) {
-  const { data, status } = useSession();
+export default function Navbar({ children, session }) {
   const pathname = usePathname();
   if (pathname.startsWith("/auth")) {
     return <div>{children}</div>;
@@ -23,14 +22,14 @@ export default function Navbar({ children }) {
       <nav className="sticky top-0 flex justify-between p-3 px-3 bg-slate-200 items-center z-50">
         <h1>Broadcasting Web Panel</h1>
         <div>
-          {status === "authenticated" ? (
+          {session ? (
             <Popover>
               <PopoverTrigger>
                 <FaCircleUser size={24} />
               </PopoverTrigger>
               <PopoverContent>
                 <div>
-                  <p>Halo, User</p>
+                  <p>Halo, {session.name}</p>
                   <p>Keluar</p>
                 </div>
               </PopoverContent>

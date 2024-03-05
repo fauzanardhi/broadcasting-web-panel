@@ -1,10 +1,16 @@
 import Navbar from "@/components/Layout/Navbar";
+import getUserSession from "@/data/user";
+import { redirect } from "next/navigation";
 import React from "react";
 
-export default function Template({ children }) {
+export default async function Template({ children }) {
+  const session = await getUserSession();
+  if (!session) {
+    redirect("/api/auth/signin");
+  }
   return (
     <div>
-      <Navbar>{children}</Navbar>
+      <Navbar session={session}>{children}</Navbar>
     </div>
   );
 }
