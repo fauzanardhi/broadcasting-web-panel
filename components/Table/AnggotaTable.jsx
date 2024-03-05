@@ -13,6 +13,7 @@ import {
   Dialog,
   DialogContent,
   DialogDescription,
+  DialogFooter,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
@@ -26,6 +27,7 @@ import {
 } from "@/components/ui/select";
 import { Input } from "../ui/input";
 import { Label } from "../ui/label";
+import { Button } from "../ui/button";
 
 export default function AnggotaTable({ data }) {
   const nama = useRef("");
@@ -123,6 +125,9 @@ export default function AnggotaTable({ data }) {
                     <Input id="divisi_anggota" />
                   </div>
                 </div>
+                <DialogFooter>
+                  <Button>Simpan</Button>
+                </DialogFooter>
               </DialogContent>
             </Dialog>
             <DropdownMenuItem>Hapus Data</DropdownMenuItem>

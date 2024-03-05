@@ -32,6 +32,7 @@ import {
 } from "@/components/ui/table";
 import AnggotaTable from "../Table/AnggotaTable";
 import { toast } from "sonner";
+import { Button } from "../ui/button";
 
 export default function AnggotaList() {
   const [data, setData] = useState([]);
@@ -79,29 +80,37 @@ export default function AnggotaList() {
 
   const addData = async (e) => {
     e.preventDefault();
-    try {
-      const res = await fetch("/api/anggota", {
-        method: "POST",
-        body: JSON.stringify({
-          nama: nama.current,
-          kelas: kelas.current,
-          image: image.current,
-          gender: gender.current,
-          jabatan: jabatan.current,
-          divisi: divisi.current,
-        }),
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
+    if (
+      nama.current &&
+      kelas.current &&
+      image.current &&
+      gender.current &&
+      jabatan.current &&
+      divisi.current
+    ) {
+      try {
+        const res = await fetch("/api/anggota", {
+          method: "POST",
+          body: JSON.stringify({
+            nama: nama.current,
+            kelas: kelas.current,
+            image: image.current,
+            gender: gender.current,
+            jabatan: jabatan.current,
+            divisi: divisi.current,
+          }),
+        });
 
-      if (!res.ok) {
+        if (!res.ok) {
+          toast.error("Something went wrong");
+        }
+
+        toast.success("Data has been added successfully");
+      } catch {
         toast.error("Something went wrong");
       }
-
-      toast.success("Data has been added successfully");
-    } catch {
-      toast.error("Something went wrong");
+    } else {
+      toast.warning("Isi Data Dengan Format Yang Benar");
     }
   };
 
@@ -124,6 +133,14 @@ export default function AnggotaList() {
       throw new Error();
     }
   };
+
+  function changeGender(e) {
+    gender.current = e;
+  }
+
+  function changeJabatan(e) {
+    jabatan.current = e;
+  }
 
   return (
     <div className="mt-2">
@@ -148,15 +165,49 @@ export default function AnggotaList() {
             <div className="flex flex-col gap-2">
               <div className="flex flex-col gap-2">
                 <Label htmlFor="nama_anggota">Nama Anggota</Label>
-                <Input id="nama_anggota" />
+                <Input
+                  id="nama_anggota"
+                  onChange={(e) => (nama.current = e.target.value)}
+                />
               </div>
               <div className="flex flex-col gap-2">
                 <Label htmlFor="kelas_anggota">Kelas</Label>
-                <Input id="kelas_anggota" />
+                <Input
+                  id="kelas_anggota"
+                  onChange={(e) => (kelas.current = e.target.value)}
+                />
+              </div>
+              <div className="flex flex-col gap-2">
+                <Label htmlFor="image_anggota">Link Gambar</Label>
+                <Input
+                  id="image_anggota"
+                  onChange={(e) => (image.current = e.target.value)}
+                />
+              </div>
+              <div className="flex flex-col gap-2">
+                <Label htmlFor="jabatan_anggota">Jabatan</Label>
+                <Select
+                  id="jabatan_anggota"
+                  onValueChange={(e) => changeJabatan(e)}
+                >
+                  <SelectTrigger className="w-[180px]">
+                    <SelectValue placeholder="Jabatan" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="Ketua">Ketua</SelectItem>
+                    <SelectItem value="Wakil_Ketua">Wakil Ketua</SelectItem>
+                    <SelectItem value="Sekertaris">Sekertaris</SelectItem>
+                    <SelectItem value="Bendahara">Bendahara</SelectItem>
+                    <SelectItem value="Anggota">Anggota</SelectItem>
+                  </SelectContent>
+                </Select>
               </div>
               <div className="flex flex-col gap-2">
                 <Label htmlFor="gender_anggota">Gender</Label>
-                <Select id="gender_anggota">
+                <Select
+                  id="gender_anggota"
+                  onValueChange={(e) => changeGender(e)}
+                >
                   <SelectTrigger className="w-[180px]">
                     <SelectValue placeholder="Gender" />
                   </SelectTrigger>
@@ -170,14 +221,14 @@ export default function AnggotaList() {
                 <Label htmlFor="kelas_anggota">Divisi</Label>
                 <Input
                   id="kelas_anggota"
-                  onChange={(e) => kelas.current === e.target.value}
+                  onChange={(e) => (divisi.current = e.target.value)}
                 />
               </div>
             </div>
+            <DialogFooter>
+              <Button onClick={addData}>Simpan</Button>
+            </DialogFooter>
           </DialogContent>
-          <DialogFooter>
-            
-          </DialogFooter>
         </Dialog>
       </div>
       {!data ? (
@@ -219,8 +270,8 @@ export default function AnggotaList() {
                 <TableHead className="text-right">Aksi</TableHead>
               </TableHeader>
               <TableBody>
-                {data.data.map((anggota, index) => (
-                  <AnggotaTable data={anggota} key={index} />
+                {data.data.map((anggota) => (
+                  <AnggotaTable data={anggota} key={anggota.id} />
                 ))}
               </TableBody>
             </Table>

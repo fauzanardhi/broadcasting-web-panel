@@ -4,7 +4,7 @@ import { Toaster } from "sonner";
 export default function ToastProvider({ children }) {
   return (
     <div>
-      <Toaster />
+      <Toaster position="bottom-left" />
       {children}
     </div>
   );

@@ -53,6 +53,7 @@ export async function GET(request, response) {
 
 export async function POST(request) {
   const body = await request.json();
+  console.log("🚀 ~ POST ~ body:", body)
   const session = await getUserSession();
   if (session?.role !== "admin") {
     return NextResponse.json({
