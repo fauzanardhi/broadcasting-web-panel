@@ -14,13 +14,6 @@ function stringToArray(str) {
 }
 
 export async function GET(request, response) {
-  const session = await getUserSession();
-  if (!session)
-    return NextResponse.json(
-      { status: 403, message: "Unautherize" },
-      { status: 403 }
-    );
-
   const query = request.nextUrl.searchParams.get("q");
   const dataKelas12 = await prisma.member.findMany({
     where: {
