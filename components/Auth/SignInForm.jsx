@@ -6,12 +6,17 @@ import { signIn, useSession } from "next-auth/react";
 import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { toast } from "sonner";
+import { Input } from "../ui/input";
+import Image from "next/image";
+import { Label } from "../ui/label";
+import { Button } from "../ui/button";
 
 function SignInForm() {
-  const email = useRef("");
+  const username = useRef("");
   const password = useRef("");
   const [showPass, setShowPass] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [loadingAuth, setLoadingAuth] = useState(false);
   const router = useRouter();
   const { status } = useSession();
   const searchParams = useSearchParams();
@@ -21,20 +26,23 @@ function SignInForm() {
   };
   const handleSignIn = async (e) => {
     e.preventDefault();
+    console.log("🚀 ~ SignInForm ~ username:", username)
+      console.log("🚀 ~ SignInForm ~ password:", password)
     try {
-      setLoading(true);
+      setLoadingAuth(true);
       const res = await signIn("credentials", {
         redirect: false,
-        email: email.current,
+        username: username.current,
         password: password.current,
         callbackUrl,
       });
-      setLoading(false);
+      setLoadingAuth(false);
+      console.log("🚀 ~ handleSignIn ~ res:", res)
 
       if (!res?.error) {
         router.push(callbackUrl);
       } else {
-        toast.warning("Email Atau Password Yang Salah");
+        toast.warning("Username Atau Password Yang Salah");
       }
     } catch (error) {
       setLoading(false);
@@ -60,7 +68,7 @@ function SignInForm() {
         <h1>
           Anda Sudah Login, Silahkan ke{" "}
           <Link href="/" className="text-blue-400">
-            Homepage
+            Halaman Utama
           </Link>
         </h1>
       </div>
@@ -68,73 +76,39 @@ function SignInForm() {
   }
   return (
     <>
-      <div className="flex min-h-full flex-1 flex-col justify-center px-6 py-12 lg:px-8">
-        <div className="sm:mx-auto sm:w-full sm:max-w-sm">
-          <h2 className="mt-10 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900">
-            Masuk Ke Coding Store
-          </h2>
-        </div>
-
-        <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
-          <form className="space-y-6" onSubmit={handleSignIn}>
-            <div>
-              <label
-                htmlFor="email"
-                className="block text-sm font-medium leading-6 text-gray-900"
-              >
-                Email address
-              </label>
-              <div className="mt-2">
-                <input
-                  id="email"
-                  name="email"
-                  type="email"
-                  autoComplete="email"
-                  onChange={(e) => (email.current = e.target.value)}
-                  className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                />
-              </div>
+      <div className="flex justify-center items-center w-screen h-screen">
+        <div className="p-3 rounded-md text-center shadow-lg">
+          <div className="flex flex-col items-center">
+            <Image src="/logo.ico" width={60} height={60} alt="logo"/>
+            <h1 className="text-2xl font-semibold">Welcome Back</h1>
+          </div>
+          <div className="p-4 flex flex-col gap-4 mt-2">
+            <div className="flex flex-col gap-3 text-left">
+              <Label htmlFor="username">Username</Label>
+              <Input
+                id="username"
+                required
+                onChange={(e) => (username.current = e.target.value)}
+              />
             </div>
-
-            <div>
-              <div className="flex items-center justify-between">
-                <label
-                  htmlFor="password"
-                  className="block text-sm font-medium leading-6 text-gray-900"
-                >
-                  Password
-                </label>
+            <div className="flex flex-col gap-3 text-left">
+              <div className="flex justify-between items-center">
+                <Label htmlFor="password">Password</Label>
+                <div onClick={handleSetPass}>
+                  {showPass ? <FaEyeSlash size={24} /> : <FaEye size={24} />}
+                </div>
               </div>
-              <div className="mt-2 flex gap-3">
-                <input
-                  id="password"
-                  name="password"
-                  type={showPass ? "password" : "text"}
-                  autoComplete="current-password"
-                  onChange={(e) => (password.current = e.target.value)}
-                  className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                />
-                <span onClick={handleSetPass} className="flex items-center">
-                  {showPass ? <FaEyeSlash size={25} /> : <FaEye size={25} />}
-                </span>
-              </div>
+              <Input
+                id="password"
+                required
+                type={showPass ? "text" : "password"}
+                onChange={(e) => (password.current = e.target.value)}
+              />
             </div>
-
-            <div>
-              {loading ? (
-                <button className="flex w-full justify-center cursor-not-allowed rounded-md px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
-                  Masuk
-                </button>
-              ) : (
-                <button
-                  type="submit"
-                  className="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-                >
-                  Loading
-                </button>
-              )}
-            </div>
-          </form>
+            <Button type="submit" className="mt-2" onClick={handleSignIn}>
+              {loadingAuth ? "Loading" : "Login"}
+            </Button>
+          </div>
         </div>
       </div>
     </>

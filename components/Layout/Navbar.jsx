@@ -9,8 +9,8 @@ import React from "react";
 import { FaCircleUser } from "react-icons/fa6";
 import SidebarMobile from "./SidebarMobile";
 import SidebarComponent from "./Sidebar";
-import { useSession } from "next-auth/react";
 import { usePathname } from "next/navigation";
+import Link from "next/link";
 
 export default function Navbar({ children, session }) {
   const pathname = usePathname();
@@ -30,12 +30,19 @@ export default function Navbar({ children, session }) {
               <PopoverContent>
                 <div>
                   <p>Halo, {session.name}</p>
-                  <p>Keluar</p>
+                  <Link href="/auth/signout">
+                    <p>Keluar</p>
+                  </Link>
                 </div>
               </PopoverContent>
             </Popover>
           ) : (
-            <p className="px-3 py-2 bg-black rounded-md text-white">Login</p>
+            <Link
+              href="/auth/login"
+              className="px-3 py-2 bg-black rounded-md text-white"
+            >
+              Login
+            </Link>
           )}
         </div>
       </nav>
