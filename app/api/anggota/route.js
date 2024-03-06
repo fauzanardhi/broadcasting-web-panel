@@ -22,11 +22,122 @@ export async function GET(request, response) {
     );
 
   const query = request.nextUrl.searchParams.get("q");
-  const data = await prisma.member.findMany({
-    include: {
+  const dataKelas12 = await prisma.member.findMany({
+    where: {
+      kelas: {
+        contains: "12",
+      },
+      jabatan: "Anggota",
+    },
+    select: {
+      slug: true,
+      nama: true,
+      kelas: true,
+      image: true,
+      gender: true,
+      jabatan: true,
       divisi: true,
     },
+    orderBy: {
+      nama: "asc",
+    },
   });
+
+  const dataKelas11 = await prisma.member.findMany({
+    where: {
+      jabatan: "Anggota",
+      kelas: {
+        contains: "11",
+      },
+    },
+    select: {
+      slug: true,
+      nama: true,
+      kelas: true,
+      image: true,
+      gender: true,
+      jabatan: true,
+      divisi: true,
+    },
+    orderBy: {
+      nama: "asc",
+    },
+  });
+
+  const dataKelas10 = await prisma.member.findMany({
+    where: {
+      jabatan: "Anggota",
+      kelas: {
+        contains: "10",
+      },
+    },
+    select: {
+      slug: true,
+      nama: true,
+      kelas: true,
+      image: true,
+      gender: true,
+      jabatan: true,
+      divisi: true,
+    },
+    orderBy: {
+      nama: "asc",
+    },
+  });
+
+  const Kelas12OrangPenting = await prisma.member.findMany({
+    where: {
+      kelas: {
+        contains: "12",
+      },
+      NOT: {
+        jabatan: "Anggota",
+      },
+    },
+    select: {
+      slug: true,
+      nama: true,
+      kelas: true,
+      image: true,
+      gender: true,
+      jabatan: true,
+      divisi: true,
+    },
+    orderBy: {
+      prioritas: "asc",
+    },
+  });
+
+  const Kelas11OrangPenting = await prisma.member.findMany({
+    where: {
+      kelas: {
+        contains: "11",
+      },
+      NOT: {
+        jabatan: "Anggota",
+      },
+    },
+    select: {
+      slug: true,
+      nama: true,
+      kelas: true,
+      image: true,
+      gender: true,
+      jabatan: true,
+      divisi: true,
+    },
+    orderBy: {
+      prioritas: "asc",
+    },
+  });
+
+  const data = [
+    ...Kelas12OrangPenting,
+    ...dataKelas12,
+    ...Kelas11OrangPenting,
+    ...dataKelas11,
+    ...dataKelas10,
+  ];
   if (!query) {
     return NextResponse.json({
       status: 200,
@@ -53,7 +164,7 @@ export async function GET(request, response) {
 
 export async function POST(request) {
   const body = await request.json();
-  console.log("🚀 ~ POST ~ body:", body)
+  console.log("🚀 ~ POST ~ body:", body);
   const session = await getUserSession();
   if (session?.role !== "admin") {
     return NextResponse.json({
@@ -87,5 +198,74 @@ export async function POST(request) {
     //     },
     //   },
     // });
+  } else {
+    return NextResponse.json({
+      status: 401,
+      message: "Format Error",
+    });
+  }
+}
+
+export async function DELETE(request) {
+  const body = await request.json();
+  const id = body.id;
+  const session = await getUserSession();
+  if (session?.role !== "admin") {
+    return NextResponse.json({
+      status: 403,
+      message: "Unautherize",
+    });
+  }
+  console.log("🚀 ~ DELETE ~ id:", id);
+  return NextResponse.json({
+    status: 200,
+    message: "OK",
+  });
+}
+
+export async function PUT(request) {
+  const body = await request.json();
+  console.log("🚀 ~ POST ~ body:", body);
+  const session = await getUserSession();
+  if (session?.role !== "admin") {
+    return NextResponse.json({
+      status: 403,
+      message: "Unautherize",
+    });
+  }
+  if (
+    body.nama &&
+    body.kelas &&
+    body.image &&
+    body.gender &&
+    body.jabatan &&
+    body.divisi
+  ) {
+    const newDivisi = stringToArray(body.divisi);
+    console.log(newDivisi);
+    console.log(body);
+    // const newAnggota = prisma.member.update({
+    //   where: {
+    //     id: body.id
+    //   }
+    //   data: {
+    //     nama: body.nama,
+    //     slug: toSlug(body.nama),
+    //     kelas: body.kelas,
+    //     image: body.image ? body.image : null,
+    //     gender: body.gender,
+    //     jabatan: body.jabatan,
+    //     divisi: {
+    //       create: [
+
+    //       ],
+    //     },
+    //   },
+    // });
+  } else {
+    return NextResponse.json({
+      status: 401,
+      message: "Format Error",
+    });
   }
 }

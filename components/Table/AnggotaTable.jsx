@@ -75,7 +75,7 @@ export default function AnggotaTable({ data, session }) {
     ) {
       try {
         const res = await fetch("/api/anggota", {
-          method: "POST",
+          method: "PUT",
           body: JSON.stringify({
             nama: nama.current,
             kelas: kelas.current,
@@ -91,6 +91,9 @@ export default function AnggotaTable({ data, session }) {
         }
 
         toast.success("Data Berhasi Di Ubah");
+        setTimeout(() => {
+          window.location.reload();
+        }, 2000);
       } catch {
         toast.error("Something went wrong");
       }
@@ -100,8 +103,24 @@ export default function AnggotaTable({ data, session }) {
   };
 
   const handleDeleteData = async () => {
-    toast.success(`Data ${data.nama} Berhasil Dihapus`);
-    window.location.reload()
+    try {
+      const res = await fetch("/api/anggota", {
+        method: "DELETE",
+        body: JSON.stringify({
+          id: data.id,
+        }),
+      });
+
+      if (!res.ok) {
+        toast.error("Something went wrong");
+      }
+      toast.success("Data Berhasi Di Ubah");
+      setTimeout(() => {
+        window.location.reload();
+      }, 2000);
+    } catch {
+      toast.error("Something went wrong");
+    }
   };
 
   function changeGender(e) {

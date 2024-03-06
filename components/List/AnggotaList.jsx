@@ -257,7 +257,7 @@ export default function AnggotaList({ session }) {
           <div className="grid grid-cols-2 mt-3 gap-3 lg:hidden">
             {data.data.map((anggota, index) => (
               <div key={index}>
-                <AnggotaCard data={anggota} />
+                <AnggotaCard data={anggota} session={session}/>
               </div>
             ))}
           </div>
