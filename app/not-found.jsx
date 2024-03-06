@@ -15,7 +15,7 @@ export default function NotFound() {
           href="/"
           className="mt-4 inline-block rounded bg-blue-500 px-4 py-2 font-semibold text-white hover:bg-blue-600"
         >
-          <p>Kembali Ke Home</p>
+          Kembali Ke Halaman Utama
         </Link>
       </div>
     </div>

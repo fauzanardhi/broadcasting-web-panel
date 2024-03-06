@@ -90,7 +90,7 @@ export default function AnggotaTable({ data, session }) {
           toast.error("Something went wrong");
         }
 
-        toast.success("Data has been added successfully");
+        toast.success("Data Berhasi Di Ubah");
       } catch {
         toast.error("Something went wrong");
       }
