@@ -1,7 +1,9 @@
 import React from "react";
 
 async function getAnggota() {
-  const res = await fetch("http://localhost:3000/api/anggota");
+  const res = await fetch("http://localhost:3000/api/anggota", {
+    cache: "no-store",
+  });
   if (res.ok) {
     return res.json();
   }
@@ -9,7 +11,9 @@ async function getAnggota() {
 }
 
 async function getArsip() {
-  const res = await fetch("http://localhost:3000/api/arsip");
+  const res = await fetch("http://localhost:3000/api/arsip", {
+    cache: "no-store",
+  });
   if (res.ok) {
     return res.json();
   }
