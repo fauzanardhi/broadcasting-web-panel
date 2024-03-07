@@ -33,8 +33,10 @@ import {
 import AnggotaTable from "../Table/AnggotaTable";
 import { toast } from "sonner";
 import { Button } from "../ui/button";
+import useSound from "use-sound";
 
 export default function AnggotaList({ session }) {
+  const [play, { stop, isPlaying }] = useSound("/cincin.mp3");
   const [data, setData] = useState([]);
   const nama = useRef("");
   const kelas = useRef("");
@@ -42,6 +44,19 @@ export default function AnggotaList({ session }) {
   const gender = useRef("");
   const image = useRef("");
   const divisi = useRef("");
+
+  const handlePlay = () => {
+    if (!isPlaying) {
+      play();
+      toast.success("Achivement Unlock, Semoga Hidup Kitaaaa!");
+    }
+  };
+
+  const handleStop = () => {
+    if (!isPlaying) {
+      stop();
+    }
+  };
 
   const [loading, setLoading] = useState(true);
   const query = useRef("");
@@ -115,8 +130,14 @@ export default function AnggotaList({ session }) {
   };
 
   const searchData = async (e) => {
+    console.log("🚀 ~ AnggotaList ~ isPlaying:", isPlaying);
     query.current = e.target.value;
     e.preventDefault();
+    if (e.target.value.toLowerCase() === "cincin") {
+      handlePlay();
+    } else {
+      handleStop();
+    }
     try {
       const response = await fetch(`/api/anggota?q=${e.target.value}`, {
         cache: "no-store",
@@ -245,8 +266,14 @@ export default function AnggotaList({ session }) {
               ) : (
                 <p>
                   Waduh, Data Dengan Hasil Pencarian{" "}
-                  <span className="font-bold">{query.current}</span> Yang Kamu
-                  Cari Tidak Ada!
+                  <span className="font-bold">
+                    {query.current === "cincin" ? (
+                        <button onClick={handleStop}>cincin</button>
+                    ) : (
+                      query.current
+                    )}
+                  </span>{" "}
+                  Yang Kamu Cari Tidak Ada!
                 </p>
               )}
             </p>
@@ -257,7 +284,7 @@ export default function AnggotaList({ session }) {
           <div className="grid grid-cols-2 mt-3 gap-3 lg:hidden">
             {data.data.map((anggota, index) => (
               <div key={index}>
-                <AnggotaCard data={anggota} session={session}/>
+                <AnggotaCard data={anggota} session={session} />
               </div>
             ))}
           </div>
@@ -275,7 +302,11 @@ export default function AnggotaList({ session }) {
               </TableHeader>
               <TableBody>
                 {data.data.map((anggota) => (
-                  <AnggotaTable data={anggota} session={session} key={anggota.id} />
+                  <AnggotaTable
+                    data={anggota}
+                    session={session}
+                    key={anggota.id}
+                  />
                 ))}
               </TableBody>
             </Table>
